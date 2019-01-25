@@ -40,12 +40,9 @@ sub decr {
 }
 
 1;
-# ABSTRACT: Provide extra magic for auto-decrement
+# ABSTRACT: Provide extra magic logic for auto-decrement
 
 =head1 SYNOPSIS
-
-To import the L</decr> function that implements the logic of auto-decrement
-magic:
 
  use Data::Decrement 'decr';
 
@@ -75,16 +72,29 @@ Quoting L<perlop>:
 
  The auto-decrement operator is not magical.
 
-This module provides the counterpart for auto-decrement. Note that the decrement
-operation is not the exact reverse of auto-increment. In general, the rule is
-that C<decr($a++)> will return the same value as the original C<$a> before
-auto-increment, but when the carrying over to the leftmost character and it is
-already "A", "a", or "0", the original value is returned and a warning "Cannot
-decrement '<VALUE>'" is generated. Examples:
+This module provides the C<decr()> function to do the decrement equivalent,
+although it is not exactly the reverse of the increment operation. In general,
+the rule is that C<decr(++$a)> should return the same value as the original
+C<$a> before the auto-increment, with a couple of exception.
+
+=item * Positive integers are decremented as string
+
+Positive integers, including those with zero prefix, are decremented as string.
 
  print decr(-123);            # prints "-124", treated as number
- print decr(123);             # prints "122", treated as STRING
- print decr(100);             # prints "099", treated as STRING
+ print decr(123);             # prints "122", treated as string
+ print decr(100);             # prints "099", treated as string
+
+"undef" like in auto-increment is treated as number 0.
+
+ print decr(undef);            # prints "-1", treated as number
+
+=item * Decrementing is not done when leftmost digit is already "A", "a", or 0
+
+When carrying over to the left-most digit, and the digit is already "A", "a", or
+"0", decrementing is not done. The original value is returned and a warning
+"Cannot decrement '<VALUE>'" is issued. Examples:
+
  print decr(0);               # prints "0", warns "Cannot decrement '0'"
  print decr("a1");            # prints "a0"
  print decr("b0");            # prints "a9"
@@ -93,6 +103,8 @@ decrement '<VALUE>'" is generated. Examples:
  print decr("bZa0");          # prints "bYz9"
  print decr("bAa0");          # prints "aZz9"
  print decr("aAa0");          # prints "aAa0", warns "Cannot decrement 'aAa0'"
+
+=back
 
 
 =head1 FUNCTIONS
@@ -108,7 +120,7 @@ Accept a value and return decremented value. If I<$val> matches the pattern C<<
 integers match this pattern). Otherwise, it will be decremented numerically.
 C<undef> is regarded as numeric 0.
 
-Will emit a warning if cannot decrement a value.
+Will return the original value and emit a warning if cannot decrement a value.
 
 
 =head1 SEE ALSO
