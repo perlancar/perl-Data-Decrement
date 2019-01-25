@@ -77,6 +77,8 @@ although it is not exactly the reverse of the increment operation. In general,
 the rule is that C<decr(++$a)> should return the same value as the original
 C<$a> before the auto-increment, with a couple of exception.
 
+=over
+
 =item * Positive integers are decremented as string
 
 Positive integers, including those with zero prefix, are decremented as string.
