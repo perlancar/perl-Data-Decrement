@@ -49,9 +49,7 @@ magic:
 
  use Data::Decrement 'decr';
 
-To actually use it for the C<--> operator, you also have to:
-
- use overload '--' => \&decr;
+ print decr("b00"); # prints "a99"
 
 
 =head1 DESCRIPTION
@@ -71,8 +69,9 @@ Quoting L<perlop>:
   print ++($foo = "Az");      # prints "Ba"
   print ++($foo = "zz");      # prints "aaa"
 
- "undef" is always treated as numeric, and in particular is changed to 0 before incrementing (so that a post-increment of an undef value will
- return 0 rather than "undef").
+ "undef" is always treated as numeric, and in particular is changed to 0 before
+ incrementing (so that a post-increment of an undef value will return 0 rather
+ than "undef").
 
  The auto-decrement operator is not magical.
 
